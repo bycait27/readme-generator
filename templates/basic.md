@@ -4,7 +4,7 @@
 
 {{if .Screenshots}}
 
-## Demo 
+## 📸 Demo 
 
 {{if .Screenshots.Demo}}
 ![Demo]({{.Screenshots.Demo}})
@@ -23,13 +23,16 @@
 {{if .TechStack}}
 ## 🛠️ Tech Stack
 
-- **Language:** {{.TechStack.Language}}
+**Language:** {{.TechStack.Language}}
 {{if .TechStack.Framework}}
-- **Framework:** {{.TechStack.Framework}}{{end}}
+
+**Framework:** {{.TechStack.Framework}}{{end}}
 {{if .TechStack.Database}}
-- **Database:** {{.TechStack.Database}}{{end}}
+
+**Database:** {{.TechStack.Database}}{{end}}
 {{if .TechStack.Dependencies}}
-- **Dependencies:**
+
+**Dependencies:**
 {{range .TechStack.Dependencies}}  - {{.}}
 {{end}}
 {{end}}
@@ -39,10 +42,13 @@
 
 This project is licensed under the {{.License}} License.
 
-## 👤 Author
+## Contact
 
 **{{.Author.Name}}**
-- 📧 Email: {{.Author.Email}}
-- 🐙 GitHub: [{{.Author.Name}}]({{.Author.GitHub}})
-{{if .Author.Website}}
-- 🌐 Website: [{{.Author.Website}}]({{.Author.Website}}){{end}}
+
+**📧 Email:** {{.Author.Email}}
+
+**🐙 GitHub:** [{{.Author.Name}}]({{.Author.GitHub}})
+
+{{if .Author.Website}}  
+**🌐 Website:** [{{.Author.Website}}]({{.Author.Website}}){{end}}
