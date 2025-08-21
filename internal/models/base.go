@@ -10,9 +10,9 @@ type BaseInfo struct {
 }
 
 type Screenshots struct {
-	Demo        string   `validate:"required,filepath"`       // path to demo gif/video
-	Images      []string `validate:"omitempty,dive,filepath"` // optional additional screenshots
-	Description string   `validate:"required,min=5,max=200"`  // caption for demo
+	Demo        string   `validate:"required,min=1,max=200"`       // path to demo gif/video
+	Images      []string `validate:"omitempty,dive,min=1,max=200"` // optional additional screenshots
+	Description string   `validate:"required,min=5,max=200"`       // caption for demo
 }
 
 type TechStack struct {
