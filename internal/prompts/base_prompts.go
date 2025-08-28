@@ -99,9 +99,16 @@ func promptAuthorInfo() (*models.AuthorInfo, error) {
 	}
 
 	// prompt for website
-	website, err := promptURL("Author Website", false)
+	var website string
+	wantWebsite, err := promptYesNo("Do you want to add a personal website?")
 	if err != nil {
 		return nil, err
+	}
+	if wantWebsite {
+		website, err = promptURL("Author website", false)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	//  create AuthorInfo
