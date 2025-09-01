@@ -128,6 +128,11 @@ func promptFromOptions(label string, options []string) (string, error) {
 	return result, err
 }
 
+// promptRequiredBoolean prompts the user to provide a boolean response
+func promptRequiredBoolean(label string) (bool, error) {
+	return promptYesNo(label)
+}
+
 // promptURL prompts for a URL with validation
 func promptURL(label string, required bool) (string, error) {
 	prompt := promptui.Prompt{
