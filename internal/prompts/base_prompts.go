@@ -12,25 +12,25 @@ import (
 
 func PromptBaseInfo() (*models.BaseInfo, error) {
 	// prompt for title
-	title, err := promptRequiredText("Project Title", 1, 100)
+	title, err := promptRequiredText("Project title", 1, 100)
 	if err != nil {
 		return nil, err
 	}
 
 	// prompt for description
-	description, err := promptRequiredText("Project Description", 10, 500)
+	description, err := promptRequiredText("Project description", 10, 500)
 	if err != nil {
 		return nil, err
 	}
 
 	// prompt for author info
-	author, err := promptAuthorInfo()
+	author, err := PromptAuthorInfo()
 	if err != nil {
 		return nil, err
 	}
 
 	// prompt for license
-	license, err := promptFromOptions("Choose Project License", []string{"MIT", "Apache-2.0", "GPL-3.0", "BSD-3-Clause", "ISC", "Unlicense"})
+	license, err := promptFromOptions("Choose project license", []string{"MIT", "Apache-2.0", "GPL-3.0", "BSD-3-Clause", "ISC", "Unlicense"})
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func PromptBaseInfo() (*models.BaseInfo, error) {
 		return nil, err
 	}
 	if wantScreenshots {
-		screenshots, err = promptScreenshotsInfo()
+		screenshots, err = PromptScreenshotsInfo()
 		if err != nil {
 			return nil, err
 		}
@@ -55,7 +55,7 @@ func PromptBaseInfo() (*models.BaseInfo, error) {
 		return nil, err
 	}
 	if wantTechStack {
-		techStack, err = promptTechStackInfo()
+		techStack, err = PromptTechStackInfo()
 		if err != nil {
 			return nil, err
 		}
@@ -79,15 +79,15 @@ func PromptBaseInfo() (*models.BaseInfo, error) {
 	return baseInfo, nil
 }
 
-func promptAuthorInfo() (*models.AuthorInfo, error) {
+func PromptAuthorInfo() (*models.AuthorInfo, error) {
 	// prompt for name
-	name, err := promptRequiredText("Author Name", 2, 50)
+	name, err := promptRequiredText("Author name", 2, 50)
 	if err != nil {
 		return nil, err
 	}
 
 	// prompt for email
-	email, err := promptEmail("Author Email")
+	email, err := promptEmail("Author email")
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func promptAuthorInfo() (*models.AuthorInfo, error) {
 	return authorInfo, nil
 }
 
-func promptScreenshotsInfo() (*models.Screenshots, error) {
+func PromptScreenshotsInfo() (*models.Screenshots, error) {
 	// prompt for demo
 	demo, err := promptDemo()
 	if err != nil {
@@ -135,22 +135,14 @@ func promptScreenshotsInfo() (*models.Screenshots, error) {
 	}
 
 	// prompt for demo description
-	description, err := promptRequiredText("Demo Description", 5, 200)
+	description, err := promptRequiredText("Demo description", 5, 200)
 	if err != nil {
 		return nil, err
 	}
 
-	// prompt for additional screenshots
-	var images []string
-	wantImages, err := promptYesNo("Do you want to add additional screenshots?")
+	images, err := promptStringList("any additional screenshot paths", false)
 	if err != nil {
 		return nil, err
-	}
-	if wantImages {
-		images, err = promptStringList("additional screenshot paths", false)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	// create ScreenshotsInfo
@@ -163,9 +155,9 @@ func promptScreenshotsInfo() (*models.Screenshots, error) {
 	return screenshotsInfo, nil
 }
 
-func promptTechStackInfo() (*models.TechStack, error) {
+func PromptTechStackInfo() (*models.TechStack, error) {
 	// prompt for primary language
-	language, err := promptFromOptions("Primary Programming Language", []string{"Go", "Python", "JavaScript", "Java", "C#", "Ruby", "PHP", "C++", "TypeScript", "Swift", "Kotlin"})
+	language, err := promptFromOptions("Primary programming language", []string{"Go", "Python", "JavaScript", "Java", "C#", "Ruby", "PHP", "C++", "TypeScript", "Swift", "Kotlin"})
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +169,7 @@ func promptTechStackInfo() (*models.TechStack, error) {
 		return nil, err
 	}
 	if wantFramework {
-		framework, err = promptFromOptions("Primary Framework",
+		framework, err = promptFromOptions("Primary framework",
 			[]string{
 				"Gin", "Echo", "Fiber", "Gorilla Mux", "Chi", // Go frameworks
 				"Express", "Fastify", "Koa", // Node.js
@@ -200,7 +192,7 @@ func promptTechStackInfo() (*models.TechStack, error) {
 		return nil, err
 	}
 	if wantDatabase {
-		database, err = promptFromOptions("Primary Database",
+		database, err = promptFromOptions("Primary database",
 			[]string{"PostgreSQL", "MySQL", "MongoDB", "Redis", "SQLite", "Cassandra", "MariaDB", "OracleDB", "DynamoDB", "Firebase"})
 		if err != nil {
 			return nil, err
@@ -208,16 +200,9 @@ func promptTechStackInfo() (*models.TechStack, error) {
 	}
 
 	// prompt for key dependencies/libraries
-	var dependencies []string
-	wantDependencies, err := promptYesNo("Do you want to list key dependencies/libraries?")
+	dependencies, err := promptStringList("any key dependencies/libraries", false)
 	if err != nil {
 		return nil, err
-	}
-	if wantDependencies {
-		dependencies, err = promptStringList("Key Dependencies/Libraries", false)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	// create TechStackInfo
@@ -231,9 +216,10 @@ func promptTechStackInfo() (*models.TechStack, error) {
 	return techStackInfo, nil
 }
 
+// helper function
 func promptDemo() (string, error) {
 	prompt := promptui.Prompt{
-		Label: "Project Demo (file path to GIF/video)",
+		Label: "Project demo (file path to GIF/video)",
 		Validate: func(input string) error {
 			trimmed := strings.TrimSpace(input)
 			if len(trimmed) < 1 {
