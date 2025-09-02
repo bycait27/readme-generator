@@ -3,6 +3,7 @@ package prompts
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/manifoldco/promptui"
@@ -53,6 +54,53 @@ func promptOptionalText(label string, maxLength int) (string, error) {
 	}
 
 	return promptRequiredText(label, 1, maxLength)
+}
+
+// promptRequiredInt prompts for required int with validation
+func promptRequiredInt(label string, minValue, maxValue int) (int, error) {
+	prompt := promptui.Prompt{
+		Label: label,
+		Validate: func(input string) error {
+			trimmed := strings.TrimSpace(input)
+			if trimmed == "" {
+				return fmt.Errorf("input is required")
+			}
+			val, err := strconv.Atoi(trimmed)
+			if err != nil {
+				return fmt.Errorf("please enter a valid integer")
+			}
+			if val < minValue {
+				return fmt.Errorf("input must be at least %d", minValue)
+			}
+			if val > maxValue {
+				return fmt.Errorf("input must be at most %d", maxValue)
+			}
+			return nil
+		},
+	}
+	result, err := prompt.Run()
+	if err != nil {
+		return 0, err
+	}
+	val, err := strconv.Atoi(strings.TrimSpace(result))
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse integer: %w", err)
+	}
+	return val, nil
+}
+
+// promptOptionalInt prompts for optional int
+func promptOptionalInt(label string, minValue, maxValue int) (int, error) {
+	wantInt, err := promptYesNo(fmt.Sprintf("Do you want to add %s?", strings.ToLower(label)))
+	if err != nil {
+		return 0, err
+	}
+
+	if !wantInt {
+		return 0, nil
+	}
+
+	return promptRequiredInt(label, minValue, maxValue)
 }
 
 // promptOptionalStringPointer prompts for optional text that returns *string
