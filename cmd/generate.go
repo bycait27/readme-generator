@@ -13,8 +13,15 @@ var generateCmd = &cobra.Command{
 	Short: "Generate a README file",
 	Long:  "Generate a professional README file based on your project details",
 	Run: func(cmd *cobra.Command, args []string) {
-		template, _ := cmd.Flags().GetString("template")
-		output, _ := cmd.Flags().GetString("output")
+		template, err := cmd.Flags().GetString("template")
+		if err != nil {
+			fmt.Printf("❌ Error: failed to get template flag: %v\n", err)
+		}
+
+		output, err := cmd.Flags().GetString("output")
+		if err != nil {
+			fmt.Printf("❌ Error: failed to get output flag: %v\n", err)
+		}
 
 		// validate template exists
 		if err := generator.ValidateTemplate(template); err != nil {
